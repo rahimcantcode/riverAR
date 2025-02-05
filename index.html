@@ -121,31 +121,31 @@
 
     <!-- Guide Container -->
     <div id="guide-container">
-      <img id="guide-image" src="scan-guide.png" alt="Scan the business card">
+      <img id="guide-image" src="/scan-guide.png" alt="Scan the business card">
       <div id="guide-text">SCAN THE CARD</div>
     </div>
 
     <!-- Buttons Container -->
     <div id="buttons-container">
       <button class="social-button" onclick="window.location.href='tel:+13074136444'">
-        <img src="icons/phone.png" alt="Phone"> Call Kay
+        <img src="/icons/phone.png" alt="Phone"> Call Kay
       </button>
       <button class="social-button" onclick="window.location.href='mailto:mkj750@gmail.com'">
-        <img src="icons/email.png" alt="Email"> Email Kay
+        <img src="/icons/email.png" alt="Email"> Email Kay
       </button>
       <button class="social-button" onclick="window.open('https://www.linkedin.com/in/kay-jones-12a99a53', '_blank')">
-        <img src="icons/linkedin.png" alt="LinkedIn"> Visit LinkedIn
+        <img src="/icons/linkedin.png" alt="LinkedIn"> Visit LinkedIn
       </button>
     </div>
 
     <!-- AR Scene -->
-    <a-scene mindar-image="imageTargetSrc: targets.mind;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+    <a-scene mindar-image="imageTargetSrc: /targets.mind;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
       
       <!-- AR Target -->
       <a-entity mindar-image-target="targetIndex: 0">
         <!-- Image Slideshow -->
-        <a-image id="slideshow" src="slideshow/img1.jpeg" position="0 1 0" width="1.2" height="0.8" opacity="1"></a-image>
+        <a-image id="slideshow" src="/slideshow/img1.jpeg" position="0 1 0" width="1.2" height="0.8" opacity="1"></a-image>
       </a-entity>
     </a-scene>
 
@@ -175,16 +175,16 @@
 
       // Image Slideshow Logic
       let slideshowImages = [
-        "slideshow/img1.jpeg",
-        "slideshow/img2.jpeg",
-        "slideshow/img3.jpeg",
-        "slideshow/img4.jpeg",
-        "slideshow/img5.jpeg",
-        "slideshow/img6.jpeg",
-        "slideshow/img7.jpeg",
-        "slideshow/img8.jpeg",
-        "slideshow/img9.jpeg",
-        "slideshow/img10.jpeg"
+        "/slideshow/img1.jpeg",
+        "/slideshow/img2.jpeg",
+        "/slideshow/img3.jpeg",
+        "/slideshow/img4.jpeg",
+        "/slideshow/img5.jpeg",
+        "/slideshow/img6.jpeg",
+        "/slideshow/img7.jpeg",
+        "/slideshow/img8.jpeg",
+        "/slideshow/img9.jpeg",
+        "/slideshow/img10.jpeg"
       ];
       let currentImageIndex = 0;
       let slideshowInterval;
@@ -196,6 +196,11 @@
           document.getElementById("slideshow").setAttribute("src", slideshowImages[currentImageIndex]);
         }, 3000); // Change image every 3 seconds
       }
+
+      // Failsafe timeout to hide loading screen after 5 seconds
+      setTimeout(() => {
+        document.getElementById('loading-screen').style.display = "none";
+      }, 5000);
     </script>
   </body>
 </html>
