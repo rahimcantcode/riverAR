@@ -7,7 +7,7 @@
     <style>
       body { margin: 0; overflow: hidden; }
 
-      /* Loading Screen Styles */
+      /* Loading Screen */
       #loading-screen {
         position: fixed;
         top: 0;
@@ -26,7 +26,7 @@
         z-index: 999;
       }
 
-      /* Spinning Loader Animation */
+      /* Loading Spinner */
       #spinner {
         width: 50px;
         height: 50px;
@@ -77,7 +77,7 @@
         left: 50%;
         transform: translateX(-50%);
         text-align: center;
-        display: none; /* Initially hidden */
+        display: none;
         z-index: 2;
       }
 
@@ -91,7 +91,7 @@
         font-weight: bold;
         color: white;
         background: transparent;
-        border: 2px solid white; /* White border for visibility */
+        border: 2px solid white;
         border-radius: 12px;
         cursor: pointer;
         text-align: center;
@@ -101,7 +101,7 @@
       }
 
       .social-button:hover {
-        background: rgba(255, 255, 255, 0.2); /* Light white hover effect */
+        background: rgba(255, 255, 255, 0.2);
         transform: scale(1.05);
       }
 
@@ -125,7 +125,7 @@
       <div id="guide-text">SCAN THE CARD</div>
     </div>
 
-    <!-- Buttons Container (Initially Hidden) -->
+    <!-- Buttons Container -->
     <div id="buttons-container">
       <button class="social-button" onclick="window.location.href='tel:+13074136444'">
         <img src="icons/phone.png" alt="Phone"> Call Kay
@@ -139,7 +139,7 @@
     </div>
 
     <!-- AR Scene -->
-    <a-scene mindar-image="imageTargetSrc: ./targets.mind;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+    <a-scene mindar-image="imageTargetSrc: targets.mind;" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
       
       <!-- AR Target -->
@@ -150,9 +150,10 @@
     </a-scene>
 
     <script>
-      // Hide the loading screen when AR is ready
+      // Hide loading screen when AR is ready
       document.querySelector('a-scene').addEventListener('arReady', function () {
         document.getElementById('loading-screen').style.display = "none";
+        console.log("✅ MindAR is ready!");
       });
 
       // Show buttons when AR detects the card
@@ -162,12 +163,39 @@
           document.getElementById('guide-container').style.display = "none";
           document.getElementById('buttons-container').style.display = "block"; // Show buttons
         }, 500);
+
+        // Start the slideshow
+        startSlideshow();
       });
 
       // Hide buttons when target is lost
       document.querySelector('a-scene').addEventListener('targetLost', function () {
         document.getElementById('buttons-container').style.display = "none"; // Hide buttons
       });
+
+      // Image Slideshow Logic
+      let slideshowImages = [
+        "slideshow/img1.jpeg",
+        "slideshow/img2.jpeg",
+        "slideshow/img3.jpeg",
+        "slideshow/img4.jpeg",
+        "slideshow/img5.jpeg",
+        "slideshow/img6.jpeg",
+        "slideshow/img7.jpeg",
+        "slideshow/img8.jpeg",
+        "slideshow/img9.jpeg",
+        "slideshow/img10.jpeg"
+      ];
+      let currentImageIndex = 0;
+      let slideshowInterval;
+
+      function startSlideshow() {
+        clearInterval(slideshowInterval); // Clear any previous interval
+        slideshowInterval = setInterval(() => {
+          currentImageIndex = (currentImageIndex + 1) % slideshowImages.length;
+          document.getElementById("slideshow").setAttribute("src", slideshowImages[currentImageIndex]);
+        }, 3000); // Change image every 3 seconds
+      }
     </script>
   </body>
 </html>
