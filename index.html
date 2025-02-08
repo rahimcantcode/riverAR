@@ -26,6 +26,22 @@
         z-index: 999;
       }
 
+      /* Loading Spinner */
+      #spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        border-top: 5px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 10px;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
       /* Guide Image and Text */
       #guide-container {
         position: absolute;
@@ -54,6 +70,23 @@
         text-align: center;
       }
 
+      /* Slideshow Title */
+      #slideshow-title {
+        position: absolute;
+        top: 20%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        font-size: 22px;
+        font-weight: bold;
+        color: white;
+        background: rgba(0, 0, 0, 0.6);
+        padding: 10px 20px;
+        border-radius: 8px;
+        display: none;
+        z-index: 3;
+        text-align: center;
+      }
+
       /* Buttons Container */
       #buttons-container {
         position: absolute;
@@ -65,43 +98,49 @@
         z-index: 2;
       }
 
+      /* Transparent Button Styles */
       .social-button {
         display: inline-flex;
         align-items: center;
         justify-content: center;
         padding: 12px;
-        font-size: 16px;
-        font-weight: bold;
-        color: white;
         background: transparent;
         border: none;
         cursor: pointer;
-        text-align: center;
-        margin: 10px;
+        margin: 0 10px;
       }
 
       .social-button img {
-        width: 32px;
-        height: 32px;
+        width: 40px;
+        height: 40px;
       }
     </style>
   </head>
   <body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+      <div id="spinner"></div>
+      Loading AR...
+    </div>
+
     <!-- Guide Container -->
     <div id="guide-container">
       <img id="guide-image" src="/scan-guide.png" alt="Scan the business card">
       <div id="guide-text">SCAN THE CARD</div>
     </div>
 
+    <!-- Slideshow Title -->
+    <div id="slideshow-title">River on its Adventures</div>
+
     <!-- Buttons Container -->
     <div id="buttons-container">
-      <button class="social-button" onclick="window.location.href='tel:+14699225033'">
+      <button class="social-button" onclick="window.location.href='tel:+13074136444'">
         <img src="/icons/phone.png" alt="Phone">
       </button>
-      <button class="social-button" onclick="window.location.href='mailto:alatreche@smu.edu'">
+      <button class="social-button" onclick="window.location.href='mailto:mkj750@gmail.com'">
         <img src="/icons/email.png" alt="Email">
       </button>
-      <button class="social-button" onclick="window.open('https://www.linkedin.com/in/abderrahim-latreche-420a2a255/', '_blank')">
+      <button class="social-button" onclick="window.open('https://www.linkedin.com/in/kay-jones-12a99a53', '_blank')">
         <img src="/icons/linkedin.png" alt="LinkedIn">
       </button>
     </div>
@@ -112,31 +151,66 @@
       
       <!-- AR Target -->
       <a-entity mindar-image-target="targetIndex: 0">
-        <!-- 3D Model -->
-        <a-gltf-model src="/3dmodel/vitruvian_man.glb" position="0 0 0" scale="0.5 0.5 0.5"></a-gltf-model>
+        <!-- Image Slideshow -->
+        <a-image id="slideshow" src="/slideshow/img1.jpeg" position="0 1 0" width="1.2" height="0.8" opacity="1"></a-image>
       </a-entity>
     </a-scene>
 
     <script>
+      const audio = new Audio("/myAudio.mp3");
+      audio.volume = 1.0;
+
       // Hide loading screen when AR is ready
       document.querySelector('a-scene').addEventListener('arReady', function () {
         document.getElementById('loading-screen').style.display = "none";
         console.log("✅ MindAR is ready!");
       });
 
-      // Show buttons when AR detects the card
+      // Show buttons, title, and start audio when AR detects the card
       document.querySelector('a-scene').addEventListener('targetFound', function () {
         document.getElementById('guide-container').style.opacity = "0";
         setTimeout(() => {
           document.getElementById('guide-container').style.display = "none";
           document.getElementById('buttons-container').style.display = "block"; // Show buttons
+          document.getElementById('slideshow-title').style.display = "block"; // Show title
+          audio.play();
         }, 500);
+
+        // Start the slideshow
+        startSlideshow();
       });
 
-      // Hide buttons when target is lost
+      // Hide buttons, title, and stop audio when target is lost
       document.querySelector('a-scene').addEventListener('targetLost', function () {
         document.getElementById('buttons-container').style.display = "none"; // Hide buttons
+        document.getElementById('slideshow-title').style.display = "none"; // Hide title
+        audio.pause();
+        audio.currentTime = 0; // Reset audio
       });
+
+      // Image Slideshow Logic
+      let slideshowImages = [
+        "/slideshow/img1.jpeg",
+        "/slideshow/img2.jpeg",
+        "/slideshow/img3.jpeg",
+        "/slideshow/img4.jpeg",
+        "/slideshow/img5.jpeg",
+        "/slideshow/img6.jpeg",
+        "/slideshow/img7.jpeg",
+        "/slideshow/img8.jpeg",
+        "/slideshow/img9.jpeg",
+        "/slideshow/img10.jpeg"
+      ];
+      let currentImageIndex = 0;
+      let slideshowInterval;
+
+      function startSlideshow() {
+        clearInterval(slideshowInterval);
+        slideshowInterval = setInterval(() => {
+          currentImageIndex = (currentImageIndex + 1) % slideshowImages.length;
+          document.getElementById("slideshow").setAttribute("src", slideshowImages[currentImageIndex]);
+        }, 3000);
+      }
     </script>
   </body>
 </html>
