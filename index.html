@@ -70,6 +70,23 @@
         text-align: center;
       }
 
+      /* Slideshow Title */
+      #slideshow-title {
+        position: absolute;
+        top: 20%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        font-size: 22px;
+        font-weight: bold;
+        color: white;
+        background: rgba(0, 0, 0, 0.6);
+        padding: 10px 20px;
+        border-radius: 8px;
+        display: none;
+        z-index: 3;
+        text-align: center;
+      }
+
       /* Buttons Container */
       #buttons-container {
         position: absolute;
@@ -83,32 +100,19 @@
 
       /* Transparent Button Styles */
       .social-button {
-        display: flex;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 12px 24px;
-        font-size: 16px;
-        font-weight: bold;
-        color: white;
+        padding: 12px;
         background: transparent;
-        border: 2px solid white;
-        border-radius: 12px;
+        border: none;
         cursor: pointer;
-        text-align: center;
-        margin: 10px;
-        width: 220px;
-        transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
-      }
-
-      .social-button:hover {
-        background: rgba(255, 255, 255, 0.2);
-        transform: scale(1.05);
+        margin: 0 10px;
       }
 
       .social-button img {
-        width: 24px;
-        height: 24px;
-        margin-right: 10px;
+        width: 40px;
+        height: 40px;
       }
     </style>
   </head>
@@ -125,16 +129,19 @@
       <div id="guide-text">SCAN THE CARD</div>
     </div>
 
+    <!-- Slideshow Title -->
+    <div id="slideshow-title">River on its Adventures</div>
+
     <!-- Buttons Container -->
     <div id="buttons-container">
       <button class="social-button" onclick="window.location.href='tel:+13074136444'">
-        <img src="/icons/phone.png" alt="Phone"> Call Kay
+        <img src="/icons/phone.png" alt="Phone">
       </button>
       <button class="social-button" onclick="window.location.href='mailto:mkj750@gmail.com'">
-        <img src="/icons/email.png" alt="Email"> Email Kay
+        <img src="/icons/email.png" alt="Email">
       </button>
       <button class="social-button" onclick="window.open('https://www.linkedin.com/in/kay-jones-12a99a53', '_blank')">
-        <img src="/icons/linkedin.png" alt="LinkedIn"> Visit LinkedIn
+        <img src="/icons/linkedin.png" alt="LinkedIn">
       </button>
     </div>
 
@@ -150,27 +157,35 @@
     </a-scene>
 
     <script>
+      const audio = new Audio("/myAudio.mp3");
+      audio.volume = 1.0;
+
       // Hide loading screen when AR is ready
       document.querySelector('a-scene').addEventListener('arReady', function () {
         document.getElementById('loading-screen').style.display = "none";
         console.log("✅ MindAR is ready!");
       });
 
-      // Show buttons when AR detects the card
+      // Show buttons, title, and start audio when AR detects the card
       document.querySelector('a-scene').addEventListener('targetFound', function () {
         document.getElementById('guide-container').style.opacity = "0";
         setTimeout(() => {
           document.getElementById('guide-container').style.display = "none";
           document.getElementById('buttons-container').style.display = "block"; // Show buttons
+          document.getElementById('slideshow-title').style.display = "block"; // Show title
+          audio.play();
         }, 500);
 
         // Start the slideshow
         startSlideshow();
       });
 
-      // Hide buttons when target is lost
+      // Hide buttons, title, and stop audio when target is lost
       document.querySelector('a-scene').addEventListener('targetLost', function () {
         document.getElementById('buttons-container').style.display = "none"; // Hide buttons
+        document.getElementById('slideshow-title').style.display = "none"; // Hide title
+        audio.pause();
+        audio.currentTime = 0; // Reset audio
       });
 
       // Image Slideshow Logic
@@ -190,17 +205,12 @@
       let slideshowInterval;
 
       function startSlideshow() {
-        clearInterval(slideshowInterval); // Clear any previous interval
+        clearInterval(slideshowInterval);
         slideshowInterval = setInterval(() => {
           currentImageIndex = (currentImageIndex + 1) % slideshowImages.length;
           document.getElementById("slideshow").setAttribute("src", slideshowImages[currentImageIndex]);
-        }, 3000); // Change image every 3 seconds
+        }, 3000);
       }
-
-      // Failsafe timeout to hide loading screen after 5 seconds
-      setTimeout(() => {
-        document.getElementById('loading-screen').style.display = "none";
-      }, 5000);
     </script>
   </body>
 </html>
